@@ -4,11 +4,14 @@ from pydantic import BaseModel
 from telebot import TeleBot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from database import SessionLocal, User
-from question import question0, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10, question11, question12
+from question import question0, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10, question11, question12, question13
 from random import shuffle
+import os
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 app = FastAPI()
-bot = TeleBot("6103232065:AAHKK2NW59-It_2xDXRdA0IHKkucO1qRoK8")
+bot = TeleBot(os.getenv('TOKEN'))
 
 class StartPayload(BaseModel):
     user_id: int
@@ -134,10 +137,21 @@ def send_random_question(user_id):
         bot.send_message(user_id, 'Вопросы для выбранной темы закончились. Начнем заново или выберите другую тему.')
 
     else:
-        next_question = topic_questions[0]
-        user.current_question_id = next_question["id"]
-        db.commit()
         markup = InlineKeyboardMarkup()
+
+        # Разделение вопросов на две части
+        mid_point = len(topic_questions) // 2
+
+        # Добавление кнопок для первой половины вопросов
+        for question in topic_questions[:mid_point]:
+            button = InlineKeyboardButton(question["text"], callback_data=f'choose_question_{question["id"]}')
+            markup.add(button)
+
+        # Добавление кнопок для второй половины вопросов
+        for question in topic_questions[mid_point:]:
+            button = InlineKeyboardButton(question["text"], callback_data=f'choose_question_{question["id"]}')
+            markup.add(button)
+
         next_button = InlineKeyboardButton('Следующий вопрос', callback_data='next_question')
         back_button = InlineKeyboardButton('Назад', callback_data='back')
         markup.row(next_button, back_button)
@@ -149,11 +163,9 @@ def send_random_question(user_id):
         except Exception as e:
             print(f"Error deleting message: {e}")
 
-        message = bot.send_message(user_id, next_question["text"], reply_markup=markup)
+        message = bot.send_message(user_id, 'Выберите вопрос:', reply_markup=markup)
         user.last_message_id = message.message_id
         db.commit()
-
-
 @bot.callback_query_handler(func=lambda call: call.data == 'next_question')
 def handle_next_question_callback(call):
     user_id = call.from_user.id
@@ -214,6 +226,8 @@ def get_questions_by_topic(topic_id):
         return question11
     elif topic_id == 'topic12':
         return question12
+    elif topic_id == 'topic13':
+        return question13
     else:
         return []
 
