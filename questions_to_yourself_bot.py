@@ -4,7 +4,8 @@ from pydantic import BaseModel
 from telebot import TeleBot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from database import SessionLocal, User
-from question import question0, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10, question11, question12
+from question import question0, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10, question11, question12, question13, question14, question15
+
 from random import shuffle
 
 app = FastAPI()
@@ -33,11 +34,11 @@ def handle_start(message):
     start_button = InlineKeyboardButton('Начать игру', callback_data='start_game')
     markup.row(start_button)
 
-    # Попытка удалить команду /start
-    try:
-        bot.delete_message(chat_id=user_id, message_id=message.message_id)
-    except Exception as e:
-        print(f"Error deleting message: {e}")
+    # # Попытка удалить команду /start
+    # try:
+    #     bot.delete_message(chat_id=user_id, message_id=message.message_id)
+    # except Exception as e:
+    #     print(f"Error deleting message: {e}")
 
     # Отправка сообщения
     message = bot.send_message(user_id, 'Добро пожаловать! Нажмите "Начать игру", чтобы начать.', reply_markup=markup)
@@ -214,6 +215,12 @@ def get_questions_by_topic(topic_id):
         return question11
     elif topic_id == 'topic12':
         return question12
+    elif topic_id == 'topic13':
+        return question13
+    elif topic_id == 'topic14':
+        return question14
+    elif topic_id == 'topic15':
+        return question15
     else:
         return []
 
