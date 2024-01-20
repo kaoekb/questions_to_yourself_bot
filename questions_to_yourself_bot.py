@@ -5,11 +5,13 @@ from telebot import TeleBot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from database import SessionLocal, User
 from question import question0, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10, question11, question12, question13, question14, question15
-
 from random import shuffle
+import os
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 app = FastAPI()
-bot = TeleBot("6103232065:AAHKK2NW59-It_2xDXRdA0IHKkucO1qRoK8")
+bot = TeleBot(os.getenv('TOKEN'))
 
 class StartPayload(BaseModel):
     user_id: int
