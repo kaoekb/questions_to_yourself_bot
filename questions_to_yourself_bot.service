@@ -1,0 +1,12 @@
+[Unit]
+Description=questions_to_yourself_bot
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/root/games/questions_to_yourself_bot
+ExecStart=/usr/bin/python3 /root/games/questions_to_yourself_bot/questions_to_yourself_bot.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
