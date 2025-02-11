@@ -1,2 +1,7 @@
 .env
 test.db
+venv
+__pycache__
+# questions_to_yourself_bot.service
+# systemd.md
+# Makefile
